@@ -1,0 +1,61 @@
+package MyPractise;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
+import java.time.LocalDate;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class Program1Steps {
+    public static WebDriver driver;	
+    // All the page Objects Used
+    public static String firstNameFields="//span[text()='First name:']//following-sibling::input[@name='firstname']";
+    public static String lastNameFields="//span[text()='Last name:']//following-sibling::input[@name='lastname']";
+    public static String gender="//input[@id='sex-1']";
+    public static String experience="//input[@id='exp-0' and @value='1']";
+    public static String date="//input[@id='datepicker']";
+    public static String profession=" //input[@value='Automation Tester']";
+    public static String fieldInput="//input[@value=''{0}'']";
+    public static String selectGeneric="//select[@id=''{0}'']";
+    public static String photoUpload="//input[@name='photo']";
+    public static String link="//a[contains(text(),'Click here to Download File')]";
+    public static String submit ="//button[@id='submit']";
+ 
+  
+    
+    
+	public static void automateForm() {
+		driver.get("https://techlistic.com/p/selenium-practice-form.html");
+		driver.manage().window().maximize();
+		driver.findElement(By.xpath(firstNameFields)).sendKeys("Shreya");// 1
+		driver.findElement(By.xpath(lastNameFields)).sendKeys("Chaturvedi");// 2
+		driver.findElement(By.xpath(gender)).click(); // 3
+		driver.findElement(By.xpath(experience)).click();// 4
+		LocalDate date1= LocalDate.now();
+		String dateIn=""+date1;
+		driver.findElement(By.xpath(date)).sendKeys(dateIn);// 5
+		driver.findElement(By.xpath(profession)).click();// 6
+		driver.findElement(By.xpath(MessageFormat.format(fieldInput, "Selenium Webdriver"))).click();//7
+		Select drpDown=new Select(driver.findElement(By.xpath(MessageFormat.format(selectGeneric,"continents"))));
+		drpDown.selectByVisibleText("Europe"); //8
+		Select drpDown1=new Select(driver.findElement(By.xpath(MessageFormat.format(selectGeneric,"selenium_commands"))));
+		drpDown1.selectByVisibleText("Switch Commands");// 9
+		driver.findElement(By.xpath(photoUpload)).sendKeys("/home/shreya/Pictures/valid.png");	//10
+		driver.findElement(By.xpath(link)).click(); //11
+		driver.navigate().back();
+		driver.findElement(By.xpath(submit)).click(); //12
+		driver.close();		
+	}
+	public static void main(String [] args) {		
+		driver=new ChromeDriver();
+		automateForm();
+		
+		
+	}
+
+}
