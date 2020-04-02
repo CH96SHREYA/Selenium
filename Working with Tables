@@ -1,0 +1,59 @@
+package MyPractise;
+
+
+
+import java.lang.reflect.Array;
+import java.text.MessageFormat;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Pragram2 {
+    public static WebDriver driver;
+    public static WebElement table;
+    public static List <WebElement> list;
+    public static String tableX="//table[@summary='Sample Table']//tbody";
+    public static String countX="//table/tfoot//td[contains(text(),'buildings')]";
+    public static String verifyHeight="//table//tbody//th[text()=''{0}'']//parent::tr//td[3]";
+    public static String structureName="//table//tbody//tr//th";
+    
+    public static void assignment1(){
+    	
+    	 table=driver.findElement(By.xpath(tableX));
+    	 list=table.findElements(By.tagName("tr"));
+    	String count=driver.findElement(By.xpath(countX)).getText();
+    	if(count.contains(""+list.size()))
+    			System.out.println("Equal");
+    	else
+    		System.out.println("Unequal");
+    	 	
+      }
+    
+    public static void assignment2() {
+    	table=driver.findElement(By.xpath(tableX));
+   	    list=table.findElements(By.xpath(structureName));
+   	     String[] length={"829m","601m","509m","492m"};
+    	for(int i=0;i<list.size();i++) {
+    		String name=list.get(i).getText();    		
+    		if(length[i].equals(driver.findElement(By.xpath(MessageFormat.format(verifyHeight,name))).getText()))
+    			System.out.println("The height of "+name+" is "+ length[i]);
+    	}
+    	
+    	
+    	
+    }
+    
+	public static void main(String[] args) {
+		driver=new ChromeDriver();
+		driver.get("https://www.techlistic.com/p/demo-selenium-practice.html");
+    	driver.manage().window().maximize();
+		assignment1();
+		assignment2();
+		driver.quit();
+
+	}
+
+}
