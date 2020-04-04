@@ -1,0 +1,123 @@
+package MyPractise;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class Program3 {
+	public static WebDriver driver;
+	public static String newWindowButton="//button[text()=''{0}'']";
+	
+	public static void newBrowserWindow() {
+		//Store the current window
+		String winBeforeHandle=driver.getWindowHandle();
+		
+		// perform click operation
+		driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"New Browser Window"))).click();
+		
+		
+		//Switch to new open window
+		for(String winHandle:driver.getWindowHandles()) 
+			driver.switchTo().window(winHandle);
+		//Perform action in new window
+			driver.manage().window().maximize();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		// Close the window
+			driver.close();
+		//Switch to org window
+			driver.switchTo().window(winBeforeHandle);		
+	}
+	public static void newBrowserTab() throws InterruptedException {
+		driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"New Browser Tab"))).click();
+		// OPEN A NEW TAB
+		/*Robot robot=new Robot();
+		robot.keyPress(KeyEvent.VK_CONTROL);
+		robot.keyPress(KeyEvent.VK_T);
+		robot.keyRelease(KeyEvent.VK_CONTROL);
+		robot.keyRelease(KeyEvent.VK_T); */
+		//SWITCH CONTROL TO THE NEW TAB
+		ArrayList<String> tabs=new ArrayList<String>(driver.getWindowHandles());
+		driver.switchTo().window(tabs.get(1));
+		//driver.get("http://google.com");
+		Thread.sleep(1000);
+			driver.close();
+	}
+	
+	public static void handleAlerts() throws InterruptedException {
+		driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"Alert Box"))).click();
+		driver.switchTo().alert().accept();
+	}
+	
+	public static void handleTimingAlert() throws InterruptedException {
+		WebDriverWait wait=new WebDriverWait(driver,15);
+		driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"Timing Alert"))).click();		
+		wait.until(ExpectedConditions.alertIsPresent());
+		driver.switchTo().alert().accept();
+	
+	}
+	public static void dragAndDrop() throws InterruptedException, AWTException {
+		//Actions action=new Actions(driver);
+		WebElement dragMe=driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"Drag Me!")));
+		WebElement dragTo=driver.findElement(By.xpath(MessageFormat.format(newWindowButton,"Drag To!")));
+		
+		//String xto=Integer.toString(dragTo.getLocation().x);
+		//String yto=Integer.toString(dragTo.getLocation().y);
+		/*((JavascriptExecutor)driver).executeScript("function simulate(f,c,d,e){var b,a=null;for(b in eventMatchers)if(eventMatchers[b].test(c)){a=b;break}if(!a)return!1;document.createEvent?(b=document.createEvent(a),a==\"HTMLEvents\"?b.initEvent(c,!0,!0):b.initMouseEvent(c,!0,!0,document.defaultView,0,d,e,d,e,!1,!1,!1,!1,0,null),f.dispatchEvent(b)):(a=document.createEventObject(),a.detail=0,a.screenX=d,a.screenY=e,a.clientX=d,a.clientY=e,a.ctrlKey=!1,a.altKey=!1,a.shiftKey=!1,a.metaKey=!1,a.button=1,f.fireEvent(\"on\"+c,a));return!0} var eventMatchers={HTMLEvents:/^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,MouseEvents:/^(?:click|dblclick|mouse(?:down|up|over|move|out))$/}; " +
+			    "simulate(arguments[0],\"mousedown\",0,0); simulate(arguments[0],\"mousemove\",arguments[1],arguments[2]); simulate(arguments[0],\"mouseup\",arguments[1],arguments[2]); ",dragMe,xto,yto);
+			
+		//( action).dragAndDropToOffset(dragMe,xto,yto).perform();
+		
+		//Actions mouseActionBuilder = new Actions(driver);
+		Actions dragAndDrop = action.clickAndHold(dragMe).moveToElement(dragTo).release(dragTo);
+		dragAndDrop.perform();  */
+		
+		Robot robot=new Robot();
+		robot.mouseMove(dragMe.getLocation().x, dragMe.getLocation().getY());
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		Thread.sleep(2000);
+		robot.mouseMove(dragTo.getLocation().getX(), dragTo.getLocation().getY());
+		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		
+		
+		// check parent child to assert
+		Thread.sleep(3000);
+		
+	}
+	
+	
+	
+	
+
+	public static void main(String[] args) throws InterruptedException, AWTException{
+		driver=new ChromeDriver();
+		driver.get("http://www.seleniumframework.com/Practiceform/");
+		driver.manage().window().maximize();
+		/*newBrowserWindow();
+		newBrowserTab();
+		handleAlerts();
+		handleTimingAlert();*/
+		dragAndDrop();
+		driver.quit();
+		
+		
+
+	}
+
+}
