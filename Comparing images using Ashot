@@ -1,0 +1,20 @@
+public  static void ssTest()throws IOException {
+		waitUntil(5000);
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='MainHeader-logo']")));
+		WebElement elem=driver.findElement(By.xpath("//a[@class='MainHeader-logo']"));
+		
+		  Screenshot screenshotTest = new AShot().takeScreenshot(driver,elem);
+	    ImageIO.write(screenshotTest.getImage(),"PNG",new File("./Screenshots/" + screenshotTest + ".png"));
+	    waitUntil(6000);
+	    
+	    Screenshot screenshotTest1 = new AShot().takeScreenshot(driver,elem);
+	    ImageIO.write(screenshotTest1.getImage(),"PNG",new File("./Screenshots/" + screenshotTest1 + ".png"));
+	    
+	    ImageDiffer imgDiff=new ImageDiffer();
+		ImageDiff diff=imgDiff.makeDiff(screenshotTest,screenshotTest1);
+		if(diff.hasDiff()==false)
+			System.out.println("Images are same");
+		else
+			System.out.println("Images are different");		
+	    driver.close();
+	}
